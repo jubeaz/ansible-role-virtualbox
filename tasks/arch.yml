@@ -21,25 +21,12 @@
 
 - name: Install virtualbox
   pacman:
-    name: virtualbox
+    name: "{{ item }}"
     state: present
     update_cache: true
   register: __pacman
-  changed_when: __pacman.packages is defined
-
-- name: Install virtualbox-ext-oracle
-  pacman:
-    name: virtualbox-ext-oracle
-    state: present
-    update_cache: true
-  register: __pacman
-  changed_when: __pacman.packages is defined
-
-- name: Install virtualbox-host-dkms
-  pacman:
-    name: virtualbox-host-dkms
-    state: present
-    update_cache: true
-  register: __pacman
-  changed_when: __pacman.packages is defined
-
+  changed_when: (__pacman.packages | default([]))| length >0 
+  loop:
+    - virtualbox
+    - virtualbox-ext-oracle
+    - virtualbox-host-dkms
